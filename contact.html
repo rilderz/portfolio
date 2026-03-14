@@ -1,0 +1,130 @@
+<section id="contact" class="contact">
+  <h2 style="text-align: center;">Contact Me</h2>
+  <form id="contact-form">
+    <input type="text" name="from_name" placeholder="Your Name" required>
+    <input type="email" name="reply_to" placeholder="Your Email" required>
+    <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
+    <button type="submit">Send Message</button>
+    <p id="form-status"></p>
+  </form>
+</section>
+
+<!-- Include EmailJS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+<script>
+  // Initialize EmailJS
+  (function(){
+    emailjs.init("-EK0ENBfe1-7f8pmJ"); // Replace with your EmailJS public key
+  })();
+
+  const form = document.getElementById("contact-form");
+  const status = document.getElementById("form-status");
+
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+    status.style.color = "#f4f4f4"; // Default for dark mode
+    status.textContent = "Sending...";
+
+    emailjs.sendForm("service_y5ihc3i", "template_c306rt9", this)
+      .then(function(){
+        status.style.color = "limegreen";
+        status.textContent = "Message sent successfully!";
+        form.reset();
+      }, function(error){
+        status.style.color = "red";
+        status.textContent = "Oops! Something went wrong.";
+        console.error(error);
+      });
+  });
+
+  // Update form theme with dark/light toggle
+  function updateFormTheme(){
+    if(document.body.classList.contains("dark")){
+      form.querySelectorAll("input, textarea").forEach(el=>{
+        el.style.background = "#333";
+        el.style.color = "#f4f4f4";
+      });
+      form.querySelector("button").style.background = "#2563eb";
+      status.style.color = "#f4f4f4";
+    } else {
+      form.querySelectorAll("input, textarea").forEach(el=>{
+        el.style.background = "#eef2ff";
+        el.style.color = "#111";
+      });
+      form.querySelector("button").style.background = "#2563eb";
+      status.style.color = "#333";
+    }
+  }
+
+  // Call when dark mode toggles
+  function toggleDarkMode(){
+    document.body.classList.toggle("dark");
+    document.body.classList.toggle("light");
+
+    const btn = document.getElementById("darkModeBtn");
+    if(document.body.classList.contains("dark")){
+      btn.textContent = "Switch to Light Mode";
+    } else {
+      btn.textContent = "Switch to Dark Mode";
+    }
+
+    updateFormTheme(); // update form colors
+  }
+
+  // Initialize form theme on page load
+  document.addEventListener("DOMContentLoaded", updateFormTheme);
+</script>
+
+<style>
+/* CONTACT FORM STYLING */
+#contact-form{
+  max-width:500px;
+  margin:20px auto;
+  display:flex;
+  flex-direction:column;
+  gap:15px;
+}
+
+#contact-form input,
+#contact-form textarea{
+  padding:12px 15px;
+  border-radius:8px;
+  border:none;
+  font-size:16px;
+  outline:none;
+  width:100%;
+  transition: all 0.3s ease;
+}
+
+#contact-form input:focus,
+#contact-form textarea:focus{
+  box-shadow:0 0 5px #2563eb;
+}
+
+#contact-form button{
+  padding:12px 20px;
+  font-size:16px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  color:white;
+  transition: all 0.3s ease;
+}
+
+#contact-form button:hover{
+  transform:scale(1.05);
+}
+
+#form-status{
+  font-weight:bold;
+  font-size:14px;
+  text-align:center;
+}
+
+/* Responsive */
+@media(max-width:600px){
+  #contact-form{
+    padding:0 15px;
+  }
+}
+</style>
