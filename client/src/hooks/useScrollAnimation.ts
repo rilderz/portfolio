@@ -1,0 +1,29 @@
+import { useEffect, useRef } from "react";
+
+/**
+ * Hook that adds a 'visible' class to elements with fade-up or slide-left
+ * classes when they enter the viewport.
+ */
+export function useScrollAnimation() {
+  const ref = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+          }
+        });
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
+    );
+
+    const elements = document.querySelectorAll(".fade-up, .slide-left");
+    elements.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, []);
+
+  return ref;
+}
