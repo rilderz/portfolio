@@ -15,20 +15,20 @@ const experiences = [
     tags: ["Data Structures", "Algorithms", "Web Dev", "Databases", "OOP"],
   },
   {
-    type: "work",
-    role: "Freelance Web Developer",
-    company: "Self-Employed",
-    period: "2023 — Present",
-    location: "Remote",
+    type: "Internship",
+    role: "Software Development Intern",
+    company: "Mfano Bora Ltd",
+    period: "2026 — Present",
+    location: "Rongai, Kenya",
     description:
-      "Developed multiple web applications for clients including e-commerce platforms and business websites. Worked with React, Node.js, and various databases to deliver full-stack solutions. Gained experience in client communication and project management.",
+      "Developed multiple web applications for clients including the company's ICT Hub website and business websites. Worked with React, Node.js, and various databases to deliver full-stack solutions. Gained experience in client communication and project management.",
     tags: ["React", "Node.js", "MongoDB", "Client Work"],
   },
   {
     type: "work",
     role: "Open Source Contributor",
     company: "Various Projects",
-    period: "2023 — Present",
+    period: "2025 — Present",
     location: "Remote",
     description:
       "Contributing to open-source projects to improve my skills and give back to the community. Participated in bug fixes, feature implementations, and code reviews. Gained experience with Git workflows and collaborative development.",
@@ -38,7 +38,7 @@ const experiences = [
     type: "education",
     role: "Self-Taught Developer",
     company: "Online Learning",
-    period: "2021 — Present",
+    period: "2024 — Present",
     location: "Remote",
     description:
       "Continuously learning through online courses, tutorials, and documentation. Completed courses on web development, JavaScript, Python, and various frameworks. Building projects to apply learned concepts and strengthen portfolio.",
@@ -140,9 +140,9 @@ export default function Experience() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
-              { title: "Internship", event: "Seeking opportunities", year: "2025" },
-              { title: "Skills", event: "Master full-stack development", year: "2025" },
-              { title: "Projects", event: "Build impactful applications", year: "2025" },
+              { title: "Internship", event: "Seeking opportunities", year: "2026" },
+              { title: "Skills", event: "Master full-stack development", year: "2026" },
+              { title: "Projects", event: "Build impactful applications", year: "2026" },
               { title: "Growth", event: "Continuous learning mindset", year: "2026" },
             ].map((goal) => (
               <div key={goal.title + goal.event} className="p-5 bg-white border-l-4 border-[#e8a020]">
