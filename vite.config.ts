@@ -4,15 +4,10 @@ import fs from "node:fs";
 import path from "node:path";
 import { defineConfig, type Plugin, type ViteDevServer } from "vite";
 
-// =============================================================================
-// Manus Debug Collector - Vite Plugin
-// Writes browser logs directly to files, trimmed when exceeding size limit
-// =============================================================================
-
 const PROJECT_ROOT = import.meta.dirname;
 const LOG_DIR = path.join(PROJECT_ROOT, ".manus-logs");
-const MAX_LOG_SIZE_BYTES = 1 * 1024 * 1024; // 1MB per log file
-const TRIM_TARGET_BYTES = Math.floor(MAX_LOG_SIZE_BYTES * 0.6); // Trim to 60% to avoid constant re-trimming
+const MAX_LOG_SIZE_BYTES = 1 * 1024 * 1024;
+const TRIM_TARGET_BYTES = Math.floor(MAX_LOG_SIZE_BYTES * 0.6);
 
 type LogSource = "browserConsole" | "networkRequests" | "sessionReplay";
 
@@ -33,6 +28,7 @@ function trimLogFile(logPath: string, maxSize: number) {
     let keptBytes = 0;
 
     const targetSize = TRIM_TARGET_BYTES;
+
     for (let i = lines.length - 1; i >= 0; i--) {
       const lineBytes = Buffer.byteLength(`${lines[i]}\n`, "utf-8");
       if (keptBytes + lineBytes > targetSize) break;
@@ -67,6 +63,7 @@ function vitePluginManusDebugCollector(): Plugin {
       if (process.env.NODE_ENV === "production") {
         return html;
       }
+
       return {
         html,
         tags: [
@@ -86,27 +83,26 @@ function vitePluginManusDebugCollector(): Plugin {
       server.middlewares.use("/__manus__/logs", (req, res, next) => {
         if (req.method !== "POST") return next();
 
-        const handlePayload = (payload: any) => {
-          if (payload.consoleLogs?.length > 0) {
-            writeToLogFile("browserConsole", payload.consoleLogs);
-          }
-          if (payload.networkRequests?.length > 0) {
-            writeToLogFile("networkRequests", payload.networkRequests);
-          }
-          if (payload.sessionEvents?.length > 0) {
-            writeToLogFile("sessionReplay", payload.sessionEvents);
-          }
-
-          res.writeHead(200, { "Content-Type": "application/json" });
-          res.end(JSON.stringify({ success: true }));
-        };
-
         let body = "";
+
         req.on("data", (chunk) => (body += chunk.toString()));
         req.on("end", () => {
           try {
-            handlePayload(JSON.parse(body));
-          } catch (e) {
+            const payload = JSON.parse(body);
+
+            if (payload.consoleLogs?.length > 0) {
+              writeToLogFile("browserConsole", payload.consoleLogs);
+            }
+            if (payload.networkRequests?.length > 0) {
+              writeToLogFile("networkRequests", payload.networkRequests);
+            }
+            if (payload.sessionEvents?.length > 0) {
+              writeToLogFile("sessionReplay", payload.sessionEvents);
+            }
+
+            res.writeHead(200, { "Content-Type": "application/json" });
+            res.end(JSON.stringify({ success: true }));
+          } catch {
             res.writeHead(400);
             res.end(JSON.stringify({ success: false }));
           }
@@ -116,14 +112,15 @@ function vitePluginManusDebugCollector(): Plugin {
   };
 }
 
-const plugins = [
-  react(),
-  tailwindcss(),
-  vitePluginManusDebugCollector()
-];
-
 export default defineConfig({
-  plugins,
+  plugins: [
+    react(),
+    tailwindcss(),
+    vitePluginManusDebugCollector()
+  ],
+
+  base: "/portfolio/",
+
   resolve: {
     alias: {
       "@": path.resolve(import.meta.dirname, "client", "src"),
@@ -131,12 +128,16 @@ export default defineConfig({
       "@assets": path.resolve(import.meta.dirname, "attached_assets"),
     },
   },
+
   envDir: path.resolve(import.meta.dirname),
+
   root: path.resolve(import.meta.dirname, "client"),
+
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
   },
+
   server: {
     port: 3000,
     strictPort: false,

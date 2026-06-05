@@ -84,7 +84,7 @@ export default function Navbar() {
             );
           })}
           <a
-            href="/DominicResume.pdf"
+            href={`${import.meta.env.BASE_URL}DominicResume.pdf`}
             target="_blank"
             rel="noopener noreferrer"
             className="ml-2 px-4 py-1.5 border border-[#e8a020] text-[#e8a020] font-['DM_Sans'] text-sm font-medium tracking-wide hover:bg-[#e8a020] hover:text-[#1a1f36] transition-colors duration-200"

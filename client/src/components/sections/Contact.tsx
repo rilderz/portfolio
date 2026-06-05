@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Mail, Github, Linkedin, Twitter, Send, MapPin } from "lucide-react";
 import { toast } from "sonner";
+import emailjs from "@emailjs/browser"; // ✅ ADDED ONLY
 
 const socialLinks = [
   { icon: Github, label: "GitHub", handle: "@rilderz", href: "https://github.com/rilderz" },
@@ -17,18 +18,39 @@ export default function Contact() {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // ✅ ONLY CHANGE IS HERE (EmailJS added)
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!form.name || !form.email || !form.message) {
       toast.error("Please fill in all required fields.");
       return;
     }
+
     setSending(true);
-    setTimeout(() => {
-      setSending(false);
+
+    try {
+      await emailjs.send(
+        "service_y5ihc3i",
+        "template_c306rt9",
+        {
+          name: form.name,
+          email: form.email,
+          subject: form.subject,
+          message: form.message,
+        },
+        "-EK0ENBfe1-7f8pmJ"
+      );
+
       setForm({ name: "", email: "", subject: "", message: "" });
+
       toast.success("Message sent! I'll get back to you within 24 hours.");
-    }, 1200);
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to send message. Try again.");
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
