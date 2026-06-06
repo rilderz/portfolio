@@ -18,7 +18,7 @@ const projects = [
     image: PROJECT_1,
     tags: ["React", "Node.js", "Express", "MongoDB", "Stripe"],
     github: "https://github.com/rilderz/ecommerce",
-    demo: "ecommerce-m4kvystg5-rilderzs-projects.vercel.app",
+    demo: "https://ecommerce-m4kvystg5-rilderzs-projects.vercel.app",
     featured: true,
     stars: 45,
   },
