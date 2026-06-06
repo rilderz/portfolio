@@ -119,7 +119,8 @@ export default defineConfig({
     vitePluginManusDebugCollector()
   ],
 
-  base: "/portfolio/",
+  // ✅ FIX: required for Vercel (NOT GitHub Pages)
+  base: "/",
 
   resolve: {
     alias: {
